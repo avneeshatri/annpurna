@@ -1,0 +1,32 @@
+. /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy.cnf
+
+ORG_DOMAIN="fci.saraswati.gov"
+ORG_NAME="fci"
+ORG_PORT="7151"
+
+export FCI_CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
+export FCI_CORE_PEER_ADDRESS=localhost:${ORG_PORT}
+
+ORG_DOMAIN="zudexo.yamuna.com"
+ORG_NAME="zudexo"
+ORG_PORT="7051" 
+
+
+export ZUDEXO_CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
+export ZUDEXO_CORE_PEER_ADDRESS=localhost:${ORG_PORT}
+
+ORG_DOMAIN="ziggy.bhagirathi.com"
+ORG_NAME="ziggy"
+ORG_PORT="7251"
+
+
+export ZIGGY_CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
+export ZIGGY_CORE_PEER_ADDRESS=localhost:${ORG_PORT}
+
+
+ORG_DOMAIN="sabkabazzar.jhelum.com"
+ORG_NAME="sabkabazzar"
+ORG_PORT="7351"
+
+export SABKABAZZAR_CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
+export SABKABAZZAR_CORE_PEER_ADDRESS=localhost:${ORG_PORT}

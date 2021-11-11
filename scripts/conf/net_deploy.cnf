@@ -1,0 +1,11 @@
+BASE_DIR=/home/atri/workspace_hlf/annpurna/
+SCRIPT_DIR=${BASE_DIR}/scripts/bin
+ORGS_DIR=${BASE_DIR}/organizations
+DOCKER_DIR=${BASE_DIR}/docker/
+NETWORK_CONF_DIR=${BASE_DIR}/network/
+STG_DIR=${BASE_DIR}/staging/
+CC_DIR=${BASE_DIR}/chaincode/
+CHAINCODE_NAME=annpurna_wallet
+CHANNEL_NAME=annpurnachannel
+ORDERER_CA=${ORGS_DIR}/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/msp/tlscacerts/tlsca.ganga.com-cert.pem
+ORDERER_HOST=orderer.ganga.com

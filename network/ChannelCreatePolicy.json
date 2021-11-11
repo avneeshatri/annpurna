@@ -1,0 +1,35 @@
+{
+   "type":1,
+   "value":{
+      "identities":[
+         {
+            "principal":{
+               "msp_identifier":"FciMSP",
+               "role":"ADMIN"
+            },
+            "principal_classification":"ROLE"
+         },
+         {
+            "principal":{
+               "msp_identifier":"ZudexoMSP",
+               "role":"ADMIN"
+            },
+            "principal_classification":"ROLE"
+         }
+      ],
+      "rule":{
+         "n_out_of":{
+            "n":2,
+            "rules":[
+               {
+                  "signed_by":0
+               },
+               {
+                  "signed_by":1
+               }
+            ]
+         }
+      },
+      "version":0
+   }
+}

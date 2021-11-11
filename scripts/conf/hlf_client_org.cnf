@@ -1,0 +1,8 @@
+. /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy.cnf
+
+export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf
+export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/users/Admin@${ORG_DOMAIN}/msp
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID=${ORG_MSPID}
+export CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
+export CORE_PEER_ADDRESS=localhost:${ORG_PORT}
