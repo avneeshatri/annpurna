@@ -81,6 +81,7 @@ services:
         - /home/atri/workspace_hlf/annpurna/organizations/zudexo/organization/peerOrganizations/zudexo.yamuna.com/peers/peer0.zudexo.yamuna.com/msp:/etc/hyperledger/fabric/msp
         - /home/atri/workspace_hlf/annpurna/organizations/zudexo/organization/peerOrganizations/zudexo.yamuna.com/peers/peer0.zudexo.yamuna.com/tls:/etc/hyperledger/fabric/tls
         - peer0.zudexo.yamuna.com:/var/hyperledger/production
+        - /home/atri/workspace_hlf/annpurna/organizations/zudexo/conf/core.yaml:/etc/hyperledger/fabric/core.yaml
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
@@ -119,6 +120,7 @@ services:
         - /home/atri/workspace_hlf/annpurna/organizations/fci/organization/peerOrganizations/fci.saraswati.gov/peers/peer0.fci.saraswati.gov/msp:/etc/hyperledger/fabric/msp
         - /home/atri/workspace_hlf/annpurna/organizations/fci/organization/peerOrganizations/fci.saraswati.gov/peers/peer0.fci.saraswati.gov/tls:/etc/hyperledger/fabric/tls
         - peer0.fci.saraswati.gov:/var/hyperledger/production
+        - /home/atri/workspace_hlf/annpurna/organizations/fci/conf/core.yaml:/etc/hyperledger/fabric/core.yaml
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
@@ -157,6 +159,7 @@ services:
         - /home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/msp:/etc/hyperledger/fabric/msp
         - /home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/tls:/etc/hyperledger/fabric/tls
         - peer0.ziggy.bhagirathi.com:/var/hyperledger/production
+        - /home/atri/workspace_hlf/annpurna/organizations/ziggy/conf/core.yaml:/etc/hyperledger/fabric/core.yaml
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
@@ -195,6 +198,7 @@ services:
         - /home/atri/workspace_hlf/annpurna/organizations/sabkabazzar/organization/peerOrganizations/sabkabazzar.jhelum.com/peers/peer0.sabkabazzar.jhelum.com/msp:/etc/hyperledger/fabric/msp
         - /home/atri/workspace_hlf/annpurna/organizations/sabkabazzar/organization/peerOrganizations/sabkabazzar.jhelum.com/peers/peer0.sabkabazzar.jhelum.com/tls:/etc/hyperledger/fabric/tls
         - peer0.sabkabazzar.jhelum.com:/var/hyperledger/production
+        - /home/atri/workspace_hlf/annpurna/organizations/sabkabazzar/conf/core.yaml:/etc/hyperledger/fabric/core.yaml
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
