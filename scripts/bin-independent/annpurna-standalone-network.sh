@@ -1,12 +1,60 @@
 #!/bin/bash
 
-. /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy.cnf
+. /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy-standalone.cnf
 
 # change to script bin directory
 cd $SCRIPT_DIR
 
 #Functions
 #++++++++++++++++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++++++
+function init {
+	echo "Performing clean up and some tweaks"
+	sudo chown atri:atri -R /home/atri/workspace_hlf/annpurna/organizations
+	rm -rf /tmp/hyperledger/
+	mkdir /tmp/hyperledger/
+}
+
+
+function startNetwork {
+	
+	echo "Starting services of members"
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-orderer.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-fci.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-zudexo.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-ziggy.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar/
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-sabkabazzar.sh &
+
+}
+
+function startCANetwork {
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer-ca
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-orderer-ca.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci-ca
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-fci-ca.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo-ca
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-zudexo-ca.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy-ca
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-ziggy-ca.sh &
+	
+	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar-ca/
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-sabkabazzar-ca.sh &
+
+}
+
+
 function printHelp {
 	echo "Arguments missing <up> <down> <ca>"
 }
@@ -246,11 +294,113 @@ function anchorPeerChannelUpdate(){
 	updateChannelForAnchorPeer "sabkabazzar.jhelum.com" "sabkabazzar" "7351" "SabkabazzarMSP"
 
 }
+
+function generateCrypto() {
+	echo "Generating Zudexo crypto"
+	${SCRIPT_DIR}/setUpCA.sh "zudexo.yamuna.com" ${ORGS_DIR}"/zudexo" "ca-zudexo" "7054"
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Zudexo CA Setup Failed"
+		return $rc
+	fi
+	
+	echo "Generating FCI crypto"
+	${SCRIPT_DIR}/setUpCA.sh "fci.saraswati.gov" ${ORGS_DIR}"/fci" "ca-fci" "7154"
+     rc=$?
+     if [[ $rc -ne 0 ]];then
+                echo "FCI CA Setup Failed"
+                return $rc
+     fi
+     
+    echo "Generating Ziggy crypto"
+	${SCRIPT_DIR}/setUpCA.sh "ziggy.bhagirathi.com" ${ORGS_DIR}"/ziggy" "ca-ziggy" "7254"
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Ziggy CA Setup Failed"
+		return $rc
+	fi   
+	
+	echo "Generating Sabkabazzar crypto"
+	${SCRIPT_DIR}/setUpCA.sh "sabkabazzar.jhelum.com" ${ORGS_DIR}"/sabkabazzar" "ca-sabkabazzar" "7354"
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Sabkabazzar CA Setup Failed"
+		return $rc
+	fi  
+	
+	echo "Generating Orderer crypto"
+	${SCRIPT_DIR}/setUpOrdererCA.sh "orderer.ganga.com" ${ORGS_DIR}"/orderer" "ca-orderer" "8054"
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Orderer CA Setup Failed"
+		return $rc
+	fi
+}
+
+function generateGenesisBlock {
+
+	#1.2 Create Genesis Block and Update policy 
+	#--------------------------------------------------------
+	
+	#Create genesis block
+	echo "Create genesis block"
+	export FABRIC_CFG_PATH=${NETWORK_CONF_DIR}
+	set -x
+	configtxgen -profile AnnpurnaOrdererGenesis -channelID system-channel -outputBlock ${NETWORK_CONF_DIR}/system-genesis-block/genesis.block
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Terminating process"
+		exit 1
+	fi
+	
+	#Convert genesis block to json
+	echo "Conver genesis block to json"
+	configtxlator proto_decode --input ${NETWORK_CONF_DIR}/system-genesis-block/genesis.block --type common.Block --output ${STG_DIR}/genesis.json
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Terminating process"
+		exit 1
+	fi
+	
+	#Update Channel Creation Policy
+	echo "Update ChannelCreationPolicy of genesis json"
+	policy=$(cat ${NETWORK_CONF_DIR}/ChannelCreatePolicy.json)
+	
+	cat ${STG_DIR}/genesis.json | jq .data.data[0].payload.data.config.channel_group.groups.Consortiums.groups.SampleConsortium.values.ChannelCreationPolicy.value="${policy}" > ${STG_DIR}/modified_genesis.json
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Terminating process"
+		exit 1
+	fi
+	
+	#Convert Updated Genesis json after modification to block
+	echo "Convert genesis json to block"
+	configtxlator proto_encode --input ${STG_DIR}/modified_genesis.json --type common.Block --output ${NETWORK_CONF_DIR}/system-genesis-block/genesis.block
+	rc=$?
+	if [[ $rc -ne 0 ]];then
+		echo "Terminating process"
+		exit 1
+	fi
+
+
+}
+
+function bringDownFabricCAServer {
+	ps -ef | grep fabric-ca-server
+	kill -9 $(ps -ef | grep fabric-ca-server | cut -d " " -f 8)
+	ps -ef | grep fabric-ca-server
+}
+
+function bringDownNetworkServer {
+	ps -ef | grep peer
+	kill -9 $(ps -ef | grep peer | cut -d " " -f 8)
+	ps -ef | grep peer
+	ps -ef | grep orderer
+	kill -9 $(ps -ef | grep orderer | cut -d " " -f 8)
+	ps -ef | grep orderer
+}
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++ Execute +++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-MODE="up"
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then
@@ -290,19 +440,29 @@ done
 echo "Mode : $MODE"
 echo "CRYPTO $CRYPTO"
 
-cd /home/atri/workspace_hlf/hlf_shipping_network/bin
-sudo docker ps -a
+cd /home/atri/workspace_hlf/annpurna/scripts/bin-independent
 
-networkDown
-bringDownFabricCA
+init
+
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
+	bringDownNetworkServer
+	bringDownFabricCAServer
 	exit 0
 fi
- 
+
+if [[ $CRYPTO == "CA" ]];then
+	echo "generate crypto"
+	startCANetwork
+	sleep 10s
+	generateCrypto
+	rc=$?
+fi
 
 if [[ $rc -eq 0 && $MODE == "UP" ]];then	
-
+	generateGenesisBlock
+	startNetwork
+	sleep 10s
 	createChannel
 	joinOrgMemeberToChannel
 	anchorPeerChannelUpdate
