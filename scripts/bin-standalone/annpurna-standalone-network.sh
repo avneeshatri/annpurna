@@ -20,37 +20,37 @@ function startNetwork {
 	echo "Starting services of members"
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-orderer.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-orderer.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-fci.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-fci.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-zudexo.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-zudexo.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-ziggy.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-ziggy.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar/
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-sabkabazzar.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-sabkabazzar.sh &
 
 }
 
 function startCANetwork {
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer-ca
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-orderer-ca.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-orderer-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci-ca
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-fci-ca.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-fci-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo-ca
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-zudexo-ca.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-zudexo-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy-ca
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-ziggy-ca.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-ziggy-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar-ca/
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-independent/setup-sabkabazzar-ca.sh &
+	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-sabkabazzar-ca.sh &
 
 }
 
@@ -440,7 +440,7 @@ done
 echo "Mode : $MODE"
 echo "CRYPTO $CRYPTO"
 
-cd /home/atri/workspace_hlf/annpurna/scripts/bin-independent
+cd /home/atri/workspace_hlf/annpurna/scripts/bin-standalone
 
 init
 
