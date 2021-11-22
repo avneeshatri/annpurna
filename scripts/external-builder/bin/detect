@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#bin/detect /home/atri/workspace_hlf/annpurna/chaincode /home/atri/workspace_hlf/annpurna/chaincode ; echo $?
+
+
+LOG_DIR=/home/atri/workspace_hlf/annpurna/scripts/logs/external_builder
+log_file=$LOG_DIR/external_builder.log
+
+
+#++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++
+
+function log() {
+        ts=`date "+%Y-%m-%d %H:%M:%S"`
+        echo "[$ts] $1" >> $log_file
+}
+
+#+++++++++++++++++++++++++++++++ Execute +++++++++++++++++++++++++++++++++++++++++++++
+
+log "Start Detect"
+CHAINCODE_SOURCE_DIR="$1"
+CHAINCODE_METADATA_DIR="$2"
+rc=1
+
+log "Src: $CHAINCODE_SOURCE_DIR , Meta: $CHAINCODE_METADATA_DIR"
+
+# use jq to extract the chaincode type from metadata.json and exit with
+# success if the chaincode type is java
+if [ "$(jq -r .type "$CHAINCODE_METADATA_DIR/metadata.json" | tr '[:upper:]' '[:lower:]')" = "java" ]; then
+    rc=0
+fi
+log "Detect completed with rc : $rc"
+exit $rc

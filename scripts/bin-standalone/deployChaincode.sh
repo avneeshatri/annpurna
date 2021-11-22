@@ -88,8 +88,8 @@ function packageInstall() {
 }
 
 function packageInstallForMembers(){
-	packageInstall "fci.saraswati.gov" "fci" "7151" "FciMSP"
 	packageInstall "zudexo.yamuna.com" "zudexo" "7051" "ZudexoMSP"
+	packageInstall "fci.saraswati.gov" "fci" "7151" "FciMSP"
 	packageInstall "ziggy.bhagirathi.com" "ziggy" "7251" "ZiggyMSP"
 	packageInstall "sabkabazzar.jhelum.com" "sabkabazzar" "7351" "SabkabazzarMSP"
 
