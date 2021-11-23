@@ -3,7 +3,7 @@
 #bin/build /home/atri/workspace_hlf/annpurna/chaincode /home/atri/workspace_hlf/annpurna/chaincode /home/atri/workspace_hlf/annpurna/staging/ ; echo $?
 
 LOG_DIR=/home/atri/workspace_hlf/annpurna/scripts/logs/external_builder
-log_file=$LOG_DIR/external_builder.log
+log_file=$LOG_DIR/${CORE_PEER_LOCALMSPID}_external_builder.log
 
 
 #++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++
