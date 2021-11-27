@@ -1,4 +1,4 @@
-cd /home/atri/go/src/github.com/hyperledger/fabric/build/bin
+cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons
 
 echo "Setup env variables"
 

@@ -387,21 +387,21 @@ function generateGenesisBlock {
 
 function bringDownFabricCAServer {
 	ps -ef | grep fabric-ca-server
-	kill -9 $(ps -ef | grep fabric-ca-server | cut -d " " -f 8)
+	kill -9 $(ps -ef | grep fabric-ca-server | cut -d " " -f ${pid_index})
 	ps -ef | grep fabric-ca-server
 }
 
 function bringDownNetworkServer {
 	ps -ef | grep peer
-	kill -9 $(ps -ef | grep peer | cut -d " " -f 8)
+	kill -9 $(ps -ef | grep peer | cut -d " " -f ${pid_index})
 	ps -ef | grep peer
 	
 	ps -ef | grep orderer
-	kill -9 $(ps -ef | grep orderer | cut -d " " -f 8)
+	kill -9 $(ps -ef | grep orderer | cut -d " " -f ${pid_index})
 	ps -ef | grep orderer
 	
 	ps -ef | grep "chaincode.jar"
-	kill -9 $(ps -ef | grep "chaincode.jar" | cut -d " " -f 8)
+	kill -9 $(ps -ef | grep "chaincode.jar" | cut -d " " -f ${pid_index})
 	ps -ef | grep "chaincode.jar"
 	
 }
@@ -452,6 +452,7 @@ init
 
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
+	pid_index=7
 	bringDownNetworkServer
 	bringDownFabricCAServer
 	exit 0

@@ -411,6 +411,9 @@ peer:
           escc:
             name: DefaultEndorsement
             library:
+          annpurna_custom_endorsement:
+            name: CustomEndorsement
+            library: /home/atri/workspace_hlf/annpurna/scripts/plugin/customPlugin.so
         validators:
           vscc:
             name: DefaultValidation
