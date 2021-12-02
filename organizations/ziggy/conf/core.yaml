@@ -290,7 +290,7 @@ peer:
     # Path on the file system where peer will store data (eg ledger). This
     # location must be access control protected to prevent unintended
     # modification that might corrupt the peer operations.
-    fileSystemPath: /tmp/hyperledger/ziggy/production
+    fileSystemPath: /var/hyperledger/production
 
     # BCCSP (Blockchain crypto provider): Select which crypto implementation or
     # library to use
@@ -364,7 +364,7 @@ peer:
     # production, it should be disabled (eg enabled: false)
     profile:
         enabled:     false
-        listenAddress: 0.0.0.0:6360
+        listenAddress: 0.0.0.0:6060
 
     # Handlers defines custom handlers that can filter and mutate
     # objects passing within the peer, such as:
@@ -411,16 +411,11 @@ peer:
           escc:
             name: DefaultEndorsement
             library:
-          annpurna_custom_endorsement:
-            name: CustomEndorsement
-            library: /home/atri/workspace_hlf/annpurna/scripts/plugin/customPlugin.so
         validators:
           vscc:
             name: DefaultValidation
             library:
-          annpurna_custom_validation:
-            name: CustomValidation
-            library: /home/atri/workspace_hlf/annpurna/scripts/plugin/customValidationPlugin.so
+
     #    library: /etc/hyperledger/fabric/plugin/escc.so
     # Number of goroutines that will execute transaction validation in parallel.
     # By default, the peer chooses the number of CPUs on the machine. Set this
@@ -551,12 +546,12 @@ chaincode:
     # List of directories to treat as external builders and launchers for
     # chaincode. The external builder detection processing will iterate over the
     # builders in the order specified below.
-    externalBuilders:
-         - path: /home/atri/workspace_hlf/annpurna/scripts/external-builder
-           name: annpurna-builder-name
-           propagateEnvironment:
-              - CORE_PEER_LOCALMSPID
-              - CORE_PEER_ID
+    externalBuilders: []
+        # - path: /path/to/directory
+        #   name: descriptive-builder-name
+        #   propagateEnvironment:
+        #      - ENVVAR_NAME_TO_PROPAGATE_FROM_PEER
+        #      - GOPROXY
 
     # The maximum duration to wait for the chaincode build and install process
     # to complete.
@@ -699,7 +694,7 @@ ledger:
 ###############################################################################
 operations:
     # host and port for the operations server
-    listenAddress: 127.0.0.1:9343
+    listenAddress: 127.0.0.1:9443
 
     # TLS configuration for the operations endpoint
     tls:

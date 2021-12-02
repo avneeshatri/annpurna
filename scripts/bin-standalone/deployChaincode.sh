@@ -46,7 +46,7 @@ function packageInstall() {
 		ORG_PORT=$3
 		ORG_MSPID=$4
 	
-		export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf
+		export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf-local
 		export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/users/Admin@${ORG_DOMAIN}/msp
 		export CORE_PEER_TLS_ENABLED=true
 		export CORE_PEER_LOCALMSPID=${ORG_MSPID}
@@ -114,7 +114,7 @@ function checkCommitRediness(){
 function commitChaincode(){
 	echo "Commit chain code as Zudexo ORG"
 	
-	export FABRIC_CFG_PATH=${ORGS_DIR}/zudexo/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/zudexo/conf-local
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/zudexo/organization/peerOrganizations/zudexo.yamuna.com/users/Admin@zudexo.yamuna.com/msp
 	export CORE_PEER_TLS_ENABLED=true
 	export CORE_PEER_LOCALMSPID="ZudexoMSP"
