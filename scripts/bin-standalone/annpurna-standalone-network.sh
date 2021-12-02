@@ -395,9 +395,15 @@ function bringDownNetworkServer {
 	ps -ef | grep peer
 	kill -9 $(ps -ef | grep peer | cut -d " " -f 8)
 	ps -ef | grep peer
+	
 	ps -ef | grep orderer
 	kill -9 $(ps -ef | grep orderer | cut -d " " -f 8)
 	ps -ef | grep orderer
+	
+	ps -ef | grep "chaincode.jar"
+	kill -9 $(ps -ef | grep "chaincode.jar" | cut -d " " -f 8)
+	ps -ef | grep "chaincode.jar"
+	
 }
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++ Execute +++++++++++++++++++++++++++++++++++++++++++++
