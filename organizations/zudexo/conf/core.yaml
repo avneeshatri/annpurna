@@ -290,7 +290,7 @@ peer:
     # Path on the file system where peer will store data (eg ledger). This
     # location must be access control protected to prevent unintended
     # modification that might corrupt the peer operations.
-    fileSystemPath: /var/hyperledger/production
+    fileSystemPath: /tmp/hyperledger/zudexo/production
 
     # BCCSP (Blockchain crypto provider): Select which crypto implementation or
     # library to use
@@ -364,7 +364,7 @@ peer:
     # production, it should be disabled (eg enabled: false)
     profile:
         enabled:     false
-        listenAddress: 0.0.0.0:6060
+        listenAddress: 0.0.0.0:6260
 
     # Handlers defines custom handlers that can filter and mutate
     # objects passing within the peer, such as:
@@ -694,7 +694,7 @@ ledger:
 ###############################################################################
 operations:
     # host and port for the operations server
-    listenAddress: 127.0.0.1:9443
+    listenAddress: 127.0.0.1:9243
 
     # TLS configuration for the operations endpoint
     tls:
