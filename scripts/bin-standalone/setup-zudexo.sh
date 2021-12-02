@@ -1,9 +1,9 @@
 #cd /home/atri/go/src/github.com/hyperledger/fabric/build/bin
-cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons/experimental/
+cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons/
 
 echo "Setting up env variables"
 
-export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/zudexo/conf/
+export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/zudexo/conf-local/
 export CORE_PEER_MSPCONFIGPATH=/home/atri/workspace_hlf/annpurna/organizations/zudexo/organization/peerOrganizations/zudexo.yamuna.com/peers/peer0.zudexo.yamuna.com/msp
 export CORE_PEER_LOCALMSPID=ZudexoMSP
 export FABRIC_LOGGING_SPEC=DEBUG

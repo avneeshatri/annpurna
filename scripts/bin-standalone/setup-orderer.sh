@@ -2,7 +2,7 @@ cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons
 
 echo "Setup env variables"
 
-export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/orderer/conf/
+export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/orderer/conf-local/
 export FABRIC_LOGGING_SPEC=DEBUG
 export ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
 export ORDERER_GENERAL_LISTENPORT=8051

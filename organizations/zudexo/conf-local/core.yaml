@@ -20,7 +20,7 @@ peer:
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
-    listenAddress: 0.0.0.0:7151
+    listenAddress: 0.0.0.0:7051
 
     # The endpoint this peer uses to listen for inbound chaincode connections.
     # If this is commented-out, the listen address is selected to be
@@ -39,7 +39,7 @@ peer:
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: 0.0.0.0:7151
+    address: 0.0.0.0:7051
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -86,7 +86,7 @@ peer:
         # Important: The endpoints here have to be endpoints of peers in the same
         # organization, because the peer would refuse connecting to these endpoints
         # unless they are in the same organization as the peer.
-        bootstrap: 127.0.0.1:7151
+        bootstrap: 127.0.0.1:7051
 
         # NOTE: orgLeader and useLeaderElection parameters are mutual exclusive.
         # Setting both to true would result in the termination of the peer
@@ -290,7 +290,7 @@ peer:
     # Path on the file system where peer will store data (eg ledger). This
     # location must be access control protected to prevent unintended
     # modification that might corrupt the peer operations.
-    fileSystemPath: /var/hyperledger/production
+    fileSystemPath: /tmp/hyperledger/zudexo/production
 
     # BCCSP (Blockchain crypto provider): Select which crypto implementation or
     # library to use
@@ -364,7 +364,7 @@ peer:
     # production, it should be disabled (eg enabled: false)
     profile:
         enabled:     false
-        listenAddress: 0.0.0.0:6060
+        listenAddress: 0.0.0.0:6260
 
     # Handlers defines custom handlers that can filter and mutate
     # objects passing within the peer, such as:
@@ -411,11 +411,16 @@ peer:
           escc:
             name: DefaultEndorsement
             library:
+          annpurna_custom_endorsement:
+            name: CustomEndorsement
+            library: /home/atri/workspace_hlf/annpurna/scripts/plugin/customPlugin.so
         validators:
           vscc:
             name: DefaultValidation
             library:
-
+          annpurna_custom_validation:
+            name: CustomValidation
+            library: /home/atri/workspace_hlf/annpurna/scripts/plugin/customValidationPlugin.so
     #    library: /etc/hyperledger/fabric/plugin/escc.so
     # Number of goroutines that will execute transaction validation in parallel.
     # By default, the peer chooses the number of CPUs on the machine. Set this
@@ -546,12 +551,12 @@ chaincode:
     # List of directories to treat as external builders and launchers for
     # chaincode. The external builder detection processing will iterate over the
     # builders in the order specified below.
-    externalBuilders: []
-        # - path: /path/to/directory
-        #   name: descriptive-builder-name
-        #   propagateEnvironment:
-        #      - ENVVAR_NAME_TO_PROPAGATE_FROM_PEER
-        #      - GOPROXY
+    externalBuilders:
+         - path: /home/atri/workspace_hlf/annpurna/scripts/external-builder
+           name: annpurna-builder-name
+           propagateEnvironment:
+              - CORE_PEER_LOCALMSPID
+              - CORE_PEER_ID
 
     # The maximum duration to wait for the chaincode build and install process
     # to complete.
@@ -694,7 +699,7 @@ ledger:
 ###############################################################################
 operations:
     # host and port for the operations server
-    listenAddress: 127.0.0.1:9443
+    listenAddress: 127.0.0.1:9243
 
     # TLS configuration for the operations endpoint
     tls:

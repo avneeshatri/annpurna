@@ -130,7 +130,7 @@ function createChannel(){
 	#1.4.2 Sign Channel Transaction
 	#Sign Channel Transaction by FCI
 	
-	export FABRIC_CFG_PATH=${ORGS_DIR}/fci/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/fci/conf-local
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/fci/organization/peerOrganizations/fci.saraswati.gov/users/Admin@fci.saraswati.gov/msp
 	export CORE_PEER_TLS_ENABLED=true
 	export CORE_PEER_LOCALMSPID="FciMSP"
@@ -148,7 +148,7 @@ function createChannel(){
 	
 	#Sign Channel Transaction by Zudexo	
 	
-	export FABRIC_CFG_PATH=${ORGS_DIR}/zudexo/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/zudexo/conf-local
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/zudexo/organization/peerOrganizations/zudexo.yamuna.com/users/Admin@zudexo.yamuna.com/msp
 	export CORE_PEER_TLS_ENABLED=true
 	export CORE_PEER_LOCALMSPID="ZudexoMSP"
@@ -169,7 +169,7 @@ function createChannel(){
 	sleep 10s
 	echo "Submitting channel transaction"
 	
-	export FABRIC_CFG_PATH=${ORGS_DIR}/fci/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/fci/conf-local
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/fci/organization/peerOrganizations/fci.saraswati.gov/users/Admin@fci.saraswati.gov/msp
 	export CORE_PEER_TLS_ENABLED=true
 	export CORE_PEER_LOCALMSPID="FciMSP"
@@ -199,7 +199,7 @@ joinChannel(){
 	ORG_MSPID=$4
 	
 	echo "Joining ${ORG_NAME} to channel"
-	export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf-local
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/users/Admin@${ORG_DOMAIN}/msp
 	export CORE_PEER_TLS_ENABLED=true
 	export CORE_PEER_LOCALMSPID=${ORG_MSPID}
@@ -263,7 +263,7 @@ function updateChannelForAnchorPeer(){
 	#1.8.1 Shipping Update Anchor Peer
 	#--------------------------------------
 	echo "Updating ${ORG_NAME} anchor peer"
-	export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf-local
 
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/users/Admin@${ORG_DOMAIN}/msp
 	export CORE_PEER_TLS_ENABLED=true

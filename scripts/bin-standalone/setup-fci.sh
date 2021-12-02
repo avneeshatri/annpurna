@@ -2,7 +2,7 @@ cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons
 
 echo "Setting up env variables"
 
-export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/fci/conf/
+export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/fci/conf-local/
 export CORE_PEER_MSPCONFIGPATH=/home/atri/workspace_hlf/annpurna/organizations/fci/organization/peerOrganizations/fci.saraswati.gov/peers/peer0.fci.saraswati.gov/msp
 export CORE_PEER_LOCALMSPID=FciMSP
 export FABRIC_LOGGING_SPEC=DEBUG
