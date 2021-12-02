@@ -43,11 +43,14 @@ type CustomEndorsement struct {
 func (e *CustomEndorsement) Endorse(prpBytes []byte, sp *peer.SignedProposal) (*peer.Endorsement, []byte, error) {
 	fmt.Println("Custom Plugin : Endorse")
 	signer, err := e.SigningIdentityForRequest(sp)
+	fmt.Println("Proposal signer")
+
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed fetching signing identity: %v", err)
 	}
 	// serialize the signing identity
 	identityBytes, err := signer.Serialize()
+	fmt.Println("Endorser MSP:" + string(identityBytes))
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not serialize the signing identity: %v", err)
 	}

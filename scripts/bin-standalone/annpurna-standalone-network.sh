@@ -452,7 +452,7 @@ init
 
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
-	pid_index=7
+	pid_index=8
 	bringDownNetworkServer
 	bringDownFabricCAServer
 	exit 0

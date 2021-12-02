@@ -15,6 +15,7 @@ signature_policy="AND ( AND ('ZudexoMSP.member', 'FciMSP.member'), OR('FciMSP.me
 . /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy.cnf
 
 endorsement_plugin="annpurna_custom_endorsement"
+validation_plugin="annpurna_custom_validation"
 cdir=$CC_DIR
 echo "Clean up chaincode dir"
 rm -rf $cdir/*
@@ -26,7 +27,7 @@ function approveChaincode {
 		echo "PackageID: $PACKAGE_ID"
 		
 		export CC_PACKAGE_ID=$PACKAGE_ID
-		peer lifecycle chaincode approveformyorg -o localhost:8051 --ordererTLSHostnameOverride ${ORDERER_HOST} --channelID $CHANNEL_NAME --signature-policy "${signature_policy}" --name $CHAINCODE_NAME --version ${vs} --package-id $CC_PACKAGE_ID --sequence ${seq} -E ${endorsement_plugin}  --tls --cafile ${ORDERER_CA}
+		peer lifecycle chaincode approveformyorg -o localhost:8051 --ordererTLSHostnameOverride ${ORDERER_HOST} --channelID $CHANNEL_NAME --signature-policy "${signature_policy}" --name $CHAINCODE_NAME --version ${vs} --package-id $CC_PACKAGE_ID --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile ${ORDERER_CA}
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -100,7 +101,7 @@ function packageInstallForMembers(){
 #----------------------------
 function checkCommitRediness(){
 	echo "Checking commit readiness"
-	peer lifecycle chaincode checkcommitreadiness --signature-policy "${signature_policy}" --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin}  --tls --cafile $ORDERER_CA
+	peer lifecycle chaincode checkcommitreadiness --signature-policy "${signature_policy}" --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA
 	rc=$?
 	
 	if [[ $rc -ne 0 ]];then
@@ -130,7 +131,7 @@ function commitChaincode(){
 	export ZIGGY_PEER_ADDRESS=localhost:7251
 	
 	
-	peer lifecycle chaincode commit --signature-policy "${signature_policy}" -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin}  --tls --cafile $ORDERER_CA --peerAddresses $ZUDEXO_PEER_ADDRESS --tlsRootCertFiles $ZUDEXO_PEER_TLS_ROOTCERT_FILE --peerAddresses $FCI_PEER_ADDRESS --tlsRootCertFiles $FCI_PEER_TLS_ROOTCERT_FILE --peerAddresses $ZIGGY_PEER_ADDRESS --tlsRootCertFiles $ZIGGY_PEER_TLS_ROOTCERT_FILE 
+	peer lifecycle chaincode commit --signature-policy "${signature_policy}" -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA --peerAddresses $ZUDEXO_PEER_ADDRESS --tlsRootCertFiles $ZUDEXO_PEER_TLS_ROOTCERT_FILE --peerAddresses $FCI_PEER_ADDRESS --tlsRootCertFiles $FCI_PEER_TLS_ROOTCERT_FILE --peerAddresses $ZIGGY_PEER_ADDRESS --tlsRootCertFiles $ZIGGY_PEER_TLS_ROOTCERT_FILE 
 	rc=$?
 	
 		if [[ $rc -ne 0 ]];then

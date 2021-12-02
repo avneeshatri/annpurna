@@ -18,7 +18,7 @@ make orderer #optional
 
 #build custom plugin
 --------------------
-GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o release/linux-amd64/bin/customPlugin.so -tags "" -ldflags "-X github.com/hyperledger/fabric/common/metadata.Version=2.3.3 -X github.com/hyperledger/fabric/common/metadata.CommitSHA=8fd2ad8c6 -X github.com/hyperledger/fabric/common/metadata.BaseDockerLabel=org.hyperledger.fabric -X github.com/hyperledger/fabric/common/metadata.DockerNamespace=hyperledger" -buildmode=plugin  github.com/hyperledger/fabric/custom/plugin/endorse
+GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o release/linux-amd64/bin/customValidationPlugin.so -tags "" -ldflags "-X github.com/hyperledger/fabric/common/metadata.Version=2.3.3 -X github.com/hyperledger/fabric/common/metadata.CommitSHA=8fd2ad8c6 -X github.com/hyperledger/fabric/common/metadata.BaseDockerLabel=org.hyperledger.fabric -X github.com/hyperledger/fabric/common/metadata.DockerNamespace=hyperledger" -buildmode=plugin  github.com/hyperledger/fabric/custom/plugin/validation
 
 #Test plugin test module
 ------------------------
@@ -29,7 +29,7 @@ mkdir -p custom/test
 
 #Execute below command , no err must be returned
 -------------------------------------------------
-go run custom/test/plugin_check.go
+go run custom/test/plugin_validation_check.go
 
 
 #Use generated plugin .so file in core.yaml and peer cli for starting node server

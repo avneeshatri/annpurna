@@ -6,10 +6,11 @@ import (
 	"plugin"
 )
 
-func main() {
+func main1() {
+
 	fmt.Println("hello world")
-	//plug, err := plugin.Open("/go/src/github.com/hyperledger/fabric/release/linux-amd64/bin/customPlugin.so")
-	plug, err := plugin.Open("/home/atri/go/src/github.com/hyperledger/fabric/release/linux-amd64/bin/customPlugin.so")
+	plug, err := plugin.Open("/home/atri/workspace_hlf/annpurna/scripts/plugin/customPlugin.so")
+	//plug, err := plugin.Open("/home/atri/go/src/github.com/hyperledger/fabric/release/linux-amd64/bin/customPlugin.so")
 	if plug == nil {
 		fmt.Println("Nil plugin loaded")
 	}

@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	. "github.com/hyperledger/fabric/core/handlers/endorsement/api"
+	validation "github.com/hyperledger/fabric/core/handlers/validation/api"
 	"plugin"
 )
 
 func main() {
-	fmt.Println("hello world")
+	fmt.Println("Custom Validation Plugin Test")
 	//plug, err := plugin.Open("/go/src/github.com/hyperledger/fabric/release/linux-amd64/bin/customPlugin.so")
-	plug, err := plugin.Open("/home/atri/go/src/github.com/hyperledger/fabric/release/linux-amd64/bin/customPlugin.so")
+	plug, err := plugin.Open("/home/atri/go/src/github.com/hyperledger/fabric/release/linux-amd64/bin/customValidationPlugin.so")
 	if plug == nil {
 		fmt.Println("Nil plugin loaded")
 	}
@@ -18,10 +18,10 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(symbol)
-	addFunc, ok := symbol.(func() PluginFactory)
+	addFunc, ok := symbol.(func() validation.PluginFactory)
 	if !ok {
 		fmt.Printf("Function not found")
-		panic("Plugin has no 'Add(int)int' function")
+		panic("Plugin has no 'NewPluginFactory' function")
 	}
 	// Uses the function to return results
 	fmt.Printf("Found function \n")
