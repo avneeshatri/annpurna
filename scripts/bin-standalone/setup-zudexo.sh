@@ -21,6 +21,13 @@ export CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
 export CORE_PEER_GOSSIP_BOOTSTRAP=peer0.zudexo.yamuna.com:7051
 export CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.zudexo.yamuna.com:7051
 
+export CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+export CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=127.0.0.1:17284
+# The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+# provide the credentials for ledger to connect to CouchDB.  The username and password must
+# match the username and password set for the associated CouchDB.
+export CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+export CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
 
 echo "Starting peer"
 

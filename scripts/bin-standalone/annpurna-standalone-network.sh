@@ -55,6 +55,22 @@ function startCANetwork {
 }
 
 
+function startCouchDBServices {
+	 sudo docker-compose -f /home/atri/workspace_hlf/annpurna/docker/docker-compose-couch.yaml up -d 2>&1
+}
+
+
+function bringDownCouchDBServices {
+	sudo docker-compose -f /home/atri/workspace_hlf/annpurna/docker/docker-compose-couch.yaml down 2>&1
+	
+    CONTAINER_IDS=$(sudo docker ps -a | awk '($2 ~ /couchdb_.*/) {print $1}')
+    if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" == " " ]; then
+          echo "No containers available for deletion"
+    else
+          sudo docker rm -f $CONTAINER_IDS
+    fi	
+}
+
 function printHelp {
 	echo "Arguments missing <up> <down> <ca>"
 }
@@ -453,6 +469,7 @@ init
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
 	pid_index=8
+	bringDownCouchDBServices
 	bringDownNetworkServer
 	bringDownFabricCAServer
 	exit 0
@@ -460,6 +477,7 @@ fi
 
 if [[ $CRYPTO == "CA" ]];then
 	echo "generate crypto"
+	startCouchDBServices
 	startCANetwork
 	sleep 10s
 	generateCrypto
