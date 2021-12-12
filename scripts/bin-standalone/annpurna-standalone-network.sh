@@ -20,36 +20,46 @@ function startNetwork {
 	echo "Starting services of members"
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-orderer.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-fci.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-zudexo.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-ziggy.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar/
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-sabkabazzar.sh &
 
 }
 
 function startCANetwork {
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer-ca
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-orderer-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci-ca
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-fci-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo-ca
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-zudexo-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy-ca
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-ziggy-ca.sh &
 	
 	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar-ca/
+	rm nohup.out
 	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-sabkabazzar-ca.sh &
 
 }
