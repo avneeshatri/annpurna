@@ -25,7 +25,7 @@ BUILD_OUTPUT_DIR="$3"
 
 cd "$CHAINCODE_SOURCE_DIR/src"
 chmod 755 gradlew
-./gradlew build shadowJar -x test
+./gradlew build shadowJar -x test  &>> $log_file
 rc=$?
 
 log "Chaincode Source Dir $CHAINCODE_SOURCE_DIR, Output Dir $BUILD_OUTPUT_DIR"
@@ -37,6 +37,6 @@ if [ -d "$CHAINCODE_SOURCE_DIR/META-INF" ]; then
     cp -a "$CHAINCODE_SOURCE_DIR/META-INF" "$BUILD_OUTPUT_DIR/"
 fi
 
-log "Build completed"
+log "Build completed rc:$rc"
 
 exit $rc

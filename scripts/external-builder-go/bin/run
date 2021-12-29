@@ -1,0 +1,76 @@
+#!/bin/bash
+
+BUILD_OUTPUT_DIR="$1"
+RUN_METADATA_DIR="$2"
+
+#DISABLE_CERT_GEN="TRUE"
+
+
+
+LOG_DIR=/home/atri/workspace_hlf/annpurna/scripts/logs/external_builder
+log_file=$LOG_DIR/${CORE_PEER_LOCALMSPID}_external_builder.log
+
+
+#++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++
+function init(){
+	ZUDEXO_SECRETS_DIR="/home/atri/workspace_hlf/annpurna/staging/external_builder/${CORE_PEER_LOCALMSPID}/secrets"
+	#ZUDEXO_STAGING_DIR="/home/atri/workspace_hlf/annpurna/staging/external_builder/${CORE_PEER_LOCALMSPID}/staging"
+	
+	#rm -rf $ZUDEXO_STAGING_DIR
+	#mkdir -p $ZUDEXO_STAGING_DIR
+}
+
+function log() {
+        ts=`date "+%Y-%m-%d %H:%M:%S"`
+        echo "[$ts] $1" >> $log_file
+}
+
+#+++++++++++++++++++++++++++++++ Execute +++++++++++++++++++++++++++++++++++++++++++++
+
+init
+
+log "Build output dir: $BUILD_OUTPUT_DIR"
+output=$(ls -ltr  $BUILD_OUTPUT_DIR)
+log "$output"
+
+log "Run Meta dir: $RUN_METADATA_DIR"
+output=$(ls -ltr $RUN_METADATA_DIR)
+log "$output"
+
+output=$(cat $RUN_METADATA_DIR/chaincode.json)
+log "chaincode.json => $output"
+# setup the environment expected by the go chaincode shim
+export CORE_CHAINCODE_ID_NAME="$(jq -r .chaincode_id "$RUN_METADATA_DIR/chaincode.json")"
+export CORE_PEER_TLS_ENABLED="true"
+export CORE_TLS_CLIENT_CERT_PATH="$ZUDEXO_SECRETS_DIR/client.crt"
+export CORE_TLS_CLIENT_KEY_PATH="$ZUDEXO_SECRETS_DIR/client.key"
+export CORE_PEER_TLS_ROOTCERT_FILE="$ZUDEXO_SECRETS_DIR/root.crt"
+
+export CORE_TLS_CLIENT_CERT_PATH_TEMP="$ZUDEXO_SECRETS_DIR/temp_client.crt"
+export CORE_TLS_CLIENT_KEY_PATH_TEMP="$ZUDEXO_SECRETS_DIR/temp_client.key"
+export CORE_PEER_TLS_ROOTCERT_FILE_TEMP="$ZUDEXO_SECRETS_DIR/temp_root.crt"
+
+export CORE_PEER_LOCALMSPID="$(jq -r .mspid "$RUN_METADATA_DIR/chaincode.json")"
+
+# populate the key and certificate material used by the go chaincode shim
+if [ -z $DISABLE_CERT_GEN ];then
+	jq -r .client_cert "$RUN_METADATA_DIR/chaincode.json" > "$CORE_TLS_CLIENT_CERT_PATH_TEMP"
+	jq -r .client_key  "$RUN_METADATA_DIR/chaincode.json" > "$CORE_TLS_CLIENT_KEY_PATH_TEMP"
+	jq -r .root_cert   "$RUN_METADATA_DIR/chaincode.json" > "$CORE_PEER_TLS_ROOTCERT_FILE"
+	
+	cat ${CORE_TLS_CLIENT_CERT_PATH_TEMP} | base64 | tr -d "\n\r" > ${CORE_TLS_CLIENT_CERT_PATH}
+	cat ${CORE_TLS_CLIENT_KEY_PATH_TEMP} | base64 | tr -d "\n\r" > ${CORE_TLS_CLIENT_KEY_PATH}
+fi
+
+if [ -z "$(jq -r .client_cert "$RUN_METADATA_DIR/chaincode.json")" ]; then
+    export CORE_PEER_TLS_ENABLED="false"
+fi
+log "CORE_TLS_CLIENT_CERT_PATH=$CORE_TLS_CLIENT_CERT_PATH"
+log "CORE_TLS_CLIENT_KEY_PATH=$CORE_TLS_CLIENT_KEY_PATH"
+log "CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE"
+
+# exec the chaincode to replace the script with the chaincode process
+peer_address=$(jq -r .peer_address "$RUN_METADATA_DIR/chaincode.json")
+log "$BUILD_OUTPUT_DIR/chaincode -peer.address=$peer_address"
+exec "$BUILD_OUTPUT_DIR/chaincode" -peer.address="$peer_address" &> $LOG_DIR/${CORE_PEER_LOCALMSPID}_chaincode.log
+

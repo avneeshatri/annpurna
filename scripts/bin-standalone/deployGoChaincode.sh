@@ -45,7 +45,6 @@ function packageInstall() {
 		ORG_NAME=$2
 		ORG_PORT=$3
 		ORG_MSPID=$4
-		LANG=$5
 	
 		export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf-local
 		export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/users/Admin@${ORG_DOMAIN}/msp
@@ -54,20 +53,19 @@ function packageInstall() {
 		export CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
 		export CORE_PEER_ADDRESS=localhost:${ORG_PORT}
 		
-		if [[ $LANG == "java" ]];then
-			echo "Package ${ORG_NAME} Java Chain Code"
-			peer lifecycle chaincode package custom_${vs}.tar.gz --path /home/atri/workspace_hlf/annpurna-wallet --lang java --label custom_${vs}
-			rc=$?
-		elif [[ $LANG == "go" ]];then
-			echo "Package ${ORG_NAME} Golang Chain Code"
+		
+		#if [[ ${ORG_NAME} == "zudexo" ]];then
+			echo "Package ${ORG_NAME} GOLANG Chain Code"
 			peer lifecycle chaincode package custom_${vs}.tar.gz --path github.com/avneeshatri/goapp/annpurna/contract --lang golang --label custom_${vs}
 			rc=$?
-		else
-			echo "Lang $LANG not supported"
-		fi
+		#else 
+		#	echo "Package ${ORG_NAME} Java Chain Code"
+		#	peer lifecycle chaincode package custom_${vs}.tar.gz --path /home/atri/workspace_hlf/annpurna-wallet --lang java --label custom_${vs}
+		#	rc=$?
+		#fi
 	
 		if [[ $rc -ne 0 ]];then
-			echo "Terminating process"
+			echo "Terminating process for ${ORG_NAME}"
 			exit 1
 		fi
 				
@@ -76,7 +74,7 @@ function packageInstall() {
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
-			echo "Terminating process"
+			echo "Terminating process for ${ORG_NAME}"
 			exit 1
 		fi
 				
@@ -99,10 +97,10 @@ function packageInstall() {
 }
 
 function packageInstallForMembers(){
-	packageInstall "zudexo.yamuna.com" "zudexo" "7051" "ZudexoMSP" "java"
-	packageInstall "fci.saraswati.gov" "fci" "7151" "FciMSP" "go"
-	packageInstall "ziggy.bhagirathi.com" "ziggy" "7251" "ZiggyMSP" "go"
-	packageInstall "sabkabazzar.jhelum.com" "sabkabazzar" "7351" "SabkabazzarMSP" "java"
+	packageInstall "zudexo.yamuna.com" "zudexo" "7051" "ZudexoMSP"
+	packageInstall "fci.saraswati.gov" "fci" "7151" "FciMSP"
+	packageInstall "ziggy.bhagirathi.com" "ziggy" "7251" "ZiggyMSP"
+	packageInstall "sabkabazzar.jhelum.com" "sabkabazzar" "7351" "SabkabazzarMSP"
 
 }
 

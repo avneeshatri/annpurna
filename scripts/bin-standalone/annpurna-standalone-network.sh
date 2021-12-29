@@ -426,9 +426,9 @@ function bringDownNetworkServer {
 	kill -9 $(ps -ef | grep orderer | cut -d " " -f ${pid_index})
 	ps -ef | grep orderer
 	
-	ps -ef | grep "chaincode.jar"
-	kill -9 $(ps -ef | grep "chaincode.jar" | cut -d " " -f ${pid_index})
-	ps -ef | grep "chaincode.jar"
+	ps -ef | grep "chaincode"
+	kill -9 $(ps -ef | grep "chaincode" | cut -d " " -f ${pid_index})
+	ps -ef | grep "chaincode"
 	
 }
 
@@ -478,7 +478,7 @@ init
 
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
-	pid_index=8
+	pid_index=7
 	bringDownCouchDBServices
 	bringDownNetworkServer
 	bringDownFabricCAServer

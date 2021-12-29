@@ -1,0 +1,50 @@
+#!/bin/bash
+
+
+LOG_DIR=/home/atri/workspace_hlf/annpurna/scripts/logs/external_builder
+log_file=$LOG_DIR/${CORE_PEER_LOCALMSPID}_external_builder.log
+
+
+#++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++
+
+function log() {
+        ts=`date "+%Y-%m-%d %H:%M:%S"`
+        echo "[$ts] $1" >> $log_file
+}
+
+#+++++++++++++++++++++++++++++++ Execute +++++++++++++++++++++++++++++++++++++++++++++
+
+log "Starting build"
+CHAINCODE_SOURCE_DIR="$1"
+CHAINCODE_METADATA_DIR="$2"
+BUILD_OUTPUT_DIR="$3"
+
+# extract package path from metadata.json
+GO_PACKAGE_PATH="$(jq -r .path "$CHAINCODE_METADATA_DIR/metadata.json")"
+
+log "Package Path:$GO_PACKAGE_PATH, Build output dir :$BUILD_OUTPUT_DIR"
+
+export GROOT=/usr/local/go
+export GOPATH=/home/atri/go:/home/atri/workspace_go
+export HOME=/home/atri
+
+
+if [ -f "$CHAINCODE_SOURCE_DIR/src/go.mod" ]; then
+	log "Building with mod"
+    go build -v -mod=readonly -o "$BUILD_OUTPUT_DIR/chaincode" "$GO_PACKAGE_PATH" &>> $log_file
+    rc=$?
+else
+    GO111MODULE=off go build -v  -o "$BUILD_OUTPUT_DIR/chaincode" "$GO_PACKAGE_PATH" &>> $log_file
+    rc=$?
+fi
+
+# save statedb index metadata to provide at release
+if [ -d "$CHAINCODE_SOURCE_DIR/META-INF" ]; then
+    cp -a "$CHAINCODE_SOURCE_DIR/META-INF" "$BUILD_OUTPUT_DIR/"
+fi
+
+
+log "Build completed: $rc"
+
+exit $rc
+

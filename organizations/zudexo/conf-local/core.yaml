@@ -557,6 +557,11 @@ chaincode:
            propagateEnvironment:
               - CORE_PEER_LOCALMSPID
               - CORE_PEER_ID
+         - path: /home/atri/workspace_hlf/annpurna/scripts/external-builder-go
+           name: annpurna-go-builder-name
+           propagateEnvironment:
+              - CORE_PEER_LOCALMSPID
+              - CORE_PEER_ID
 
     # The maximum duration to wait for the chaincode build and install process
     # to complete.
