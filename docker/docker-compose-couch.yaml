@@ -1,0 +1,80 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '3.7'
+
+networks:
+  annpurna:
+    name: fabric_annpurna
+
+services:
+  couchdb_fci:
+    container_name: couchdb_fci
+    image: couchdb:3.1.1
+    labels:
+      service: hyperledger-fabric
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "17184:5984"
+    networks:
+      - annpurna
+
+  couchdb_zudexo:
+    container_name: couchdb_zudexo
+    image: couchdb:3.1.1
+    labels:
+      service: hyperledger-fabric
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "17284:5984"
+    networks:
+      - annpurna
+
+
+  couchdb_ziggy:
+    container_name: couchdb_ziggy
+    image: couchdb:3.1.1
+    labels:
+      service: hyperledger-fabric
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "17384:5984"
+    networks:
+      - annpurna
+
+  couchdb_sabkabazzar:
+    container_name: couchdb_sabkabazzar
+    image: couchdb:3.1.1
+    labels:
+      service: hyperledger-fabric
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "17484:5984"
+    networks:
+      - annpurna

@@ -1,0 +1,51 @@
+CSR cmd
+-------
+openssl req -out CSR.csr -new -newkey rsa:2048 -keyout privatekey.key
+
+-------- Generate Certificate using CSR -----------------------------
+CA_CERT=/home/atri/workspace_hlf/annpurna/organizations/fci/fabric-ca-standalone/ca-cert.pem
+CA_PRIV_KEY=/home/atri/workspace_hlf/annpurna/organizations/fci/fabric-ca-standalone/msp/keystore/df386093c63c3d25edeb8ad70106460c76915b2190e844993a1a7b879ff779b6_sk
+
+openssl x509 -req -in CSR.csr -CA $CA_CERT -CAkey $CA_PRIV_KEY -CAcreateserial -out peer_fci_saraswati_gov.crt -days 3650 -sha256 
+
+
+
+Verify Certificate Private / Public Key
+----------------------------------------
+openssl rsa -modulus -noout -in privatekey.key | openssl md5 | openssl md5
+openssl rsa -check -noout -in privatekey.key| openssl md5
+
+
+-------- Verify if CA and Cert matches for PEM format ---------------------------------
+
+openssl verify -CAfile $CA_CERT peer_fci_saraswati_gov.crt
+
+
+------------------------- Intermidiate Certificate Steps ----------------------------
+cd /home/atri/workspace_hlf/annpurna/staging/tmp/intermediate
+ mkdir certs crl csr newcerts private
+ 
+Generate Private Key
+------------------------
+openssl genrsa -aes256 -out private/intermediate.key.pem 4096
+
+chmod 400 private/intermediate.key.pem
+
+
+Generate CSR 
+---------------
+
+openssl genrsa -aes256 -out private/intermediate.key.pem 4096
+
+openssl req -config openssl.cnf -new -sha256 -key private/intermediate.key.pem  -out csr/intermediate.csr.pem -subj "/C=US/ST=North Carolina/L=North Carolina/O=Hyperledger/OU=Fabric/CN=saraswati.com"
+
+openssl ca -config openssl.cnf \
+      -days 3650 -notext -md sha256 \
+      -in csr/intermediate.csr.pem \
+      -out certs/intermediate.cert.pem
+
+openssl x509 -noout -text \
+      -in certs/intermediate.cert.pem
+
+openssl verify -CAfile cacert.pem  certs/intermediate.cert.pem
+
