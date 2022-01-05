@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#bin/build /home/atri/workspace_hlf/annpurna/chaincode /home/atri/workspace_hlf/annpurna/chaincode /home/atri/workspace_hlf/annpurna/staging/ ; echo $?
+
+LOG_DIR=/home/atri/workspace_hlf/annpurna/scripts/logs/external_builder
+log_file=$LOG_DIR/${CORE_PEER_LOCALMSPID}_external_builder.log
+
+
+#++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++
+
+function log() {
+	ts=`date "+%Y-%m-%d %H:%M:%S"`
+       	echo "[$ts] $1" >> $log_file
+}
+
+#+++++++++++++++++++++++++++++++ Execute +++++++++++++++++++++++++++++++++++++++++++++
+
+log "Starting build"
+
+
+CHAINCODE_SOURCE_DIR="$1"
+CHAINCODE_METADATA_DIR="$2"
+BUILD_OUTPUT_DIR="$3"
+
+
+cd "$CHAINCODE_SOURCE_DIR/src"
+chmod 755 gradlew
+./gradlew build shadowJar -x test
+rc=$?
+
+log "Chaincode Source Dir $CHAINCODE_SOURCE_DIR, Output Dir $BUILD_OUTPUT_DIR"
+
+cp ${CHAINCODE_SOURCE_DIR}/src/build/libs/chaincode.jar ${BUILD_OUTPUT_DIR}
+
+# save statedb index metadata to provide at release
+if [ -d "$CHAINCODE_SOURCE_DIR/META-INF" ]; then
+    cp -a "$CHAINCODE_SOURCE_DIR/META-INF" "$BUILD_OUTPUT_DIR/"
+fi
+
+log "Build completed"
+
+exit $rc

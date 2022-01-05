@@ -13,7 +13,9 @@ fi
 signature_policy="AND ( AND ('ZudexoMSP.member', 'FciMSP.member'), OR('FciMSP.member','ZudexoMSP.member','Ziggy.member', 'SabkabazzarMSP.member'))"
 
 . /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy.cnf
-	
+
+endorsement_plugin="annpurna_custom_endorsement"
+validation_plugin="annpurna_custom_validation"
 cdir=$CC_DIR
 echo "Clean up chaincode dir"
 rm -rf $cdir/*
@@ -25,7 +27,7 @@ function approveChaincode {
 		echo "PackageID: $PACKAGE_ID"
 		
 		export CC_PACKAGE_ID=$PACKAGE_ID
-		peer lifecycle chaincode approveformyorg -o localhost:8051 --ordererTLSHostnameOverride ${ORDERER_HOST} --channelID $CHANNEL_NAME --signature-policy "${signature_policy}" --name $CHAINCODE_NAME --version ${vs} --package-id $CC_PACKAGE_ID --sequence ${seq} --tls --cafile ${ORDERER_CA}
+		peer lifecycle chaincode approveformyorg -o localhost:8051 --ordererTLSHostnameOverride ${ORDERER_HOST} --channelID $CHANNEL_NAME --signature-policy "${signature_policy}" --name $CHAINCODE_NAME --version ${vs} --package-id $CC_PACKAGE_ID --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile ${ORDERER_CA}
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -44,7 +46,7 @@ function packageInstall() {
 		ORG_PORT=$3
 		ORG_MSPID=$4
 	
-		export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf
+		export FABRIC_CFG_PATH=${ORGS_DIR}/${ORG_NAME}/conf-local
 		export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/users/Admin@${ORG_DOMAIN}/msp
 		export CORE_PEER_TLS_ENABLED=true
 		export CORE_PEER_LOCALMSPID=${ORG_MSPID}
@@ -88,8 +90,8 @@ function packageInstall() {
 }
 
 function packageInstallForMembers(){
-	packageInstall "fci.saraswati.gov" "fci" "7151" "FciMSP"
 	packageInstall "zudexo.yamuna.com" "zudexo" "7051" "ZudexoMSP"
+	packageInstall "fci.saraswati.gov" "fci" "7151" "FciMSP"
 	packageInstall "ziggy.bhagirathi.com" "ziggy" "7251" "ZiggyMSP"
 	packageInstall "sabkabazzar.jhelum.com" "sabkabazzar" "7351" "SabkabazzarMSP"
 
@@ -99,7 +101,7 @@ function packageInstallForMembers(){
 #----------------------------
 function checkCommitRediness(){
 	echo "Checking commit readiness"
-	peer lifecycle chaincode checkcommitreadiness --signature-policy "${signature_policy}" --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} --tls --cafile $ORDERER_CA
+	peer lifecycle chaincode checkcommitreadiness --signature-policy "${signature_policy}" --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA
 	rc=$?
 	
 	if [[ $rc -ne 0 ]];then
@@ -112,7 +114,7 @@ function checkCommitRediness(){
 function commitChaincode(){
 	echo "Commit chain code as Zudexo ORG"
 	
-	export FABRIC_CFG_PATH=${ORGS_DIR}/zudexo/conf
+	export FABRIC_CFG_PATH=${ORGS_DIR}/zudexo/conf-local
 	export CORE_PEER_MSPCONFIGPATH=${ORGS_DIR}/zudexo/organization/peerOrganizations/zudexo.yamuna.com/users/Admin@zudexo.yamuna.com/msp
 	export CORE_PEER_TLS_ENABLED=true
 	export CORE_PEER_LOCALMSPID="ZudexoMSP"
@@ -129,7 +131,7 @@ function commitChaincode(){
 	export ZIGGY_PEER_ADDRESS=localhost:7251
 	
 	
-	peer lifecycle chaincode commit --signature-policy "${signature_policy}" -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} --tls --cafile $ORDERER_CA --peerAddresses $ZUDEXO_PEER_ADDRESS --tlsRootCertFiles $ZUDEXO_PEER_TLS_ROOTCERT_FILE --peerAddresses $FCI_PEER_ADDRESS --tlsRootCertFiles $FCI_PEER_TLS_ROOTCERT_FILE --peerAddresses $ZIGGY_PEER_ADDRESS --tlsRootCertFiles $ZIGGY_PEER_TLS_ROOTCERT_FILE 
+	peer lifecycle chaincode commit --signature-policy "${signature_policy}" -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA --peerAddresses $ZUDEXO_PEER_ADDRESS --tlsRootCertFiles $ZUDEXO_PEER_TLS_ROOTCERT_FILE --peerAddresses $FCI_PEER_ADDRESS --tlsRootCertFiles $FCI_PEER_TLS_ROOTCERT_FILE --peerAddresses $ZIGGY_PEER_ADDRESS --tlsRootCertFiles $ZIGGY_PEER_TLS_ROOTCERT_FILE 
 	rc=$?
 	
 		if [[ $rc -ne 0 ]];then
