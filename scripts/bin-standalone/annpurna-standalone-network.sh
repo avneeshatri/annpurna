@@ -2,6 +2,7 @@
 
 . /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy-standalone.cnf
 
+export PATH=$PATH:/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm
 # change to script bin directory
 cd $SCRIPT_DIR
 
@@ -478,7 +479,7 @@ init
 
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
-	pid_index=7
+	pid_index=8
 	bringDownCouchDBServices
 	bringDownNetworkServer
 	bringDownFabricCAServer

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/atri/go/src/github.com/hyperledger/fabric-ca/bin/
+cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons
 
 #+++++++++++++++++++++++++++++++++++++++++++++++ Functions +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -47,7 +47,7 @@ function register() {
  
       mkdir -p $FABRIC_CA_CLIENT_HOME
 	
-	  fabric-ca-client enroll -u https://admin:adminpw@localhost:${ORG_CA_PORT} --caname $CA_NAME --tls.certfiles $ORG_CA_TLS_PATH
+	  ./fabric-ca-client enroll -u https://admin:adminpw@localhost:${ORG_CA_PORT} --caname $CA_NAME --tls.certfiles $ORG_CA_TLS_PATH
       rc=$?
         
       if [[ $rc -eq 0 ]];then
@@ -74,7 +74,7 @@ function register() {
 
 function registerFabricCAClient() {
 
-	output=$(fabric-ca-client identity list --caname $CA_NAME  --tls.certfiles $ORG_CA_TLS_PATH | grep $1)
+	output=$(./fabric-ca-client identity list --caname $CA_NAME  --tls.certfiles $ORG_CA_TLS_PATH | grep $1)
 	
 	if [[ ! -z ${output} ]];then
 		echo "$1 already registered"
@@ -82,14 +82,14 @@ function registerFabricCAClient() {
 	fi
 	
 	echo "Register $1"
-	fabric-ca-client register --caname $CA_NAME --id.name $1 --id.secret $2 --id.type $3 --tls.certfiles $ORG_CA_TLS_PATH
+	./fabric-ca-client register --caname $CA_NAME --id.name $1 --id.secret $2 --id.type $3 --tls.certfiles $ORG_CA_TLS_PATH
 	rc=$?
 	
 	return $rc
 }
 
 function generateMSP(){
-	fabric-ca-client enroll -u https://orderer:ordererpw@localhost:${ORG_CA_PORT}  --caname $CA_NAME -M ${FABRIC_CA_CLIENT_HOME}"/orderers/"${ORG_DOMAIN}"/msp/" --csr.hosts ${ORG_DOMAIN} --csr.hosts localhost --tls.certfiles ${ORG_CA_TLS_PATH}
+	./fabric-ca-client enroll -u https://orderer:ordererpw@localhost:${ORG_CA_PORT}  --caname $CA_NAME -M ${FABRIC_CA_CLIENT_HOME}"/orderers/"${ORG_DOMAIN}"/msp/" --csr.hosts ${ORG_DOMAIN} --csr.hosts localhost --tls.certfiles ${ORG_CA_TLS_PATH}
   { set +x; } 2>/dev/null
 
   cp ${FABRIC_CA_CLIENT_HOME}/msp/config.yaml ${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/msp/config.yaml
@@ -99,7 +99,7 @@ function generateMSP(){
 function generateAdminMSP(){  
   echo "Generating the admin msp"
   set -x
-  fabric-ca-client enroll -u https://ordererAdmin:ordererAdminpw@localhost:${ORG_CA_PORT}  --caname $CA_NAME -M ${FABRIC_CA_CLIENT_HOME}/users/Admin@${ORG_DOMAIN}/msp --tls.certfiles ${ORG_CA_TLS_PATH}
+  ./fabric-ca-client enroll -u https://ordererAdmin:ordererAdminpw@localhost:${ORG_CA_PORT}  --caname $CA_NAME -M ${FABRIC_CA_CLIENT_HOME}/users/Admin@${ORG_DOMAIN}/msp --tls.certfiles ${ORG_CA_TLS_PATH}
   { set +x; } 2>/dev/null
 
   cp ${FABRIC_CA_CLIENT_HOME}/msp/config.yaml ${FABRIC_CA_CLIENT_HOME}/users/Admin@${ORG_DOMAIN}/msp/config.yaml
@@ -109,7 +109,7 @@ function generateTls(){
 
   echo "Generating the orderer-tls certificates"
   set -x
-  fabric-ca-client enroll -u https://orderer:ordererpw@localhost:${ORG_CA_PORT} --caname ca-orderer -M "${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/tls" --enrollment.profile tls --csr.hosts ${ORG_DOMAIN} --csr.hosts localhost --tls.certfiles ${ORG_CA_TLS_PATH}
+  ./fabric-ca-client enroll -u https://orderer:ordererpw@localhost:${ORG_CA_PORT} --caname ca-orderer -M "${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/tls" --enrollment.profile tls --csr.hosts ${ORG_DOMAIN} --csr.hosts localhost --tls.certfiles ${ORG_CA_TLS_PATH}
   { set +x; } 2>/dev/null
    cp "${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/tls/tlscacerts/"* "${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/tls/ca.crt"
   cp "${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/tls/signcerts/"* "${FABRIC_CA_CLIENT_HOME}/orderers/${ORG_DOMAIN}/tls/server.crt"

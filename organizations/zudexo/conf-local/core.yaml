@@ -295,7 +295,7 @@ peer:
     # BCCSP (Blockchain crypto provider): Select which crypto implementation or
     # library to use
     BCCSP:
-        Default: SW
+        Default: PKCS11
         # Settings for the SW crypto provider (i.e. when DEFAULT: SW)
         SW:
             # TODO: The default Hash and Security level needs refactoring to be
@@ -310,13 +310,14 @@ peer:
         # Settings for the PKCS#11 crypto provider (i.e. when DEFAULT: PKCS11)
         PKCS11:
             # Location of the PKCS11 module library
-            Library:
+            Library: /usr/local/lib/softhsm/libsofthsm2.so
             # Token Label
-            Label:
+            Label: Token-1
             # User PIN
-            Pin:
-            Hash:
-            Security:
+            Pin: "1234"
+            Hash: SHA2
+            Security: 256
+            Immutable: false
 
     # Path on the file system where peer will find MSP local configurations
     mspConfigPath: msp

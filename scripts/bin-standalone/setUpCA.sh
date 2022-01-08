@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/atri/go/src/github.com/hyperledger/fabric-ca/bin/
+cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm
 
 #+++++++++++++++++++++++++++++++++++++++ Functions ++++++++++++++++++++++++++++++++++++++++++++++++++ 
 
@@ -12,16 +12,25 @@ function initSetup() {
 	export ORG_BASE_DIR=${base_path}
 	export FABRIC_CA_CLIENT_HOME=${ORG_BASE_DIR}/organization/peerOrganizations/${ORG_DOMAIN}/
 	export CA_NAME=${ca_name}
-	export ORG_CA_PATH=${ORG_BASE_DIR}/fabric-ca-standalone
+	if [[ $CA_NAME == "ca-zudexo" ]];then
+		export ORG_CA_PATH=${ORG_BASE_DIR}/fabric-ca-standalone-hsm
+	else
+		export ORG_CA_PATH=${ORG_BASE_DIR}/fabric-ca-standalone
+	fi
+	
 	export ORG_CA_TLS_PATH=${ORG_CA_PATH}/tls-cert.pem
 	
 	
 	echo "############################ Delete existing setup files##########################"
 #	sudo rm -rf ${ORG_CA_PATH}
-#	mkdir ${ORG_CA_PATH}
+#	mkdir -p ${ORG_CA_PATH}
 	
-	rm -rf ${FABRIC_CA_CLIENT_HOME}
-	mkdir ${FABRIC_CA_CLIENT_HOME}
+	rm -rf ${FABRIC_CA_CLIENT_HOME}/ca
+	rm -rf ${FABRIC_CA_CLIENT_HOME}/msp
+	rm -rf ${FABRIC_CA_CLIENT_HOME}/peers
+	rm -rf ${FABRIC_CA_CLIENT_HOME}/tlsca
+	rm -rf ${FABRIC_CA_CLIENT_HOME}/users
+	mkdir -p ${FABRIC_CA_CLIENT_HOME}
 	
 	echo "############################################ Create Org Config #####################"
 	mkdir -p $FABRIC_CA_CLIENT_HOME/msp
@@ -51,7 +60,7 @@ function register() {
  
       mkdir -p $FABRIC_CA_CLIENT_HOME
 	
-	  fabric-ca-client enroll -u https://admin:adminpw@localhost:${ORG_CA_PORT} --caname $CA_NAME --tls.certfiles $ORG_CA_TLS_PATH
+	  ./fabric-ca-client enroll -u https://admin:adminpw@localhost:${ORG_CA_PORT} --caname $CA_NAME --tls.certfiles $ORG_CA_TLS_PATH
       rc=$?
         
       if [[ $rc -eq 0 ]];then
@@ -85,7 +94,7 @@ function register() {
 
 function registerFabricCAClient() {
 
-	output=$(fabric-ca-client identity list --caname $CA_NAME  --tls.certfiles $ORG_CA_TLS_PATH | grep $1)
+	output=$(./fabric-ca-client identity list --caname $CA_NAME  --tls.certfiles $ORG_CA_TLS_PATH | grep $1)
 	
 	if [[ ! -z ${output} ]];then
 		echo "$1 already registered"
@@ -93,7 +102,7 @@ function registerFabricCAClient() {
 	fi
 	
 	echo "Register $1"
-	fabric-ca-client register --caname $CA_NAME --id.name $1 --id.secret $2 --id.type $3 --tls.certfiles $ORG_CA_TLS_PATH
+	./fabric-ca-client register --caname $CA_NAME --id.name $1 --id.secret $2 --id.type $3 --tls.certfiles $ORG_CA_TLS_PATH
 	rc=$?
 	
 	return $rc
@@ -112,7 +121,7 @@ function generatePeerTls() {
 
   echo "Generate the peer0 msp"
   
-  fabric-ca-client enroll -u https://peer0:peer0pw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $PEER_ID_CFG_PATH/msp --csr.hosts $PEER_HOST --tls.certfiles $ORG_CA_TLS_PATH
+  ./fabric-ca-client enroll -u https://peer0:peer0pw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $PEER_ID_CFG_PATH/msp --csr.hosts $PEER_HOST --tls.certfiles $ORG_CA_TLS_PATH
   rc=$?
   
   if [[ $rc -ne 0 ]];then
@@ -124,7 +133,7 @@ function generatePeerTls() {
 
   echo "Generate the peer0-tls certificates"
   
-  fabric-ca-client enroll -u https://peer0:peer0pw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $PEER_ID_CFG_PATH/tls --enrollment.profile tls --csr.hosts $PEER_HOST --csr.hosts localhost --tls.certfiles $ORG_CA_TLS_PATH
+  ./fabric-ca-client enroll -u https://peer0:peer0pw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $PEER_ID_CFG_PATH/tls --enrollment.profile tls --csr.hosts $PEER_HOST --csr.hosts localhost --tls.certfiles $ORG_CA_TLS_PATH
   rc=$?
   
   if [[ $rc -ne 0 ]];then
@@ -165,7 +174,7 @@ function generateUserMsp() {
 		
 		 echo "Generate the user msp"
 		 set -x
-		 fabric-ca-client enroll -u https://user1:user1pw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $FABRIC_CA_CLIENT_HOME/users/User1@${ORG_DOMAIN}/msp --tls.certfiles $ORG_CA_TLS_PATH
+		 ./fabric-ca-client enroll -u https://user1:user1pw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $FABRIC_CA_CLIENT_HOME/users/User1@${ORG_DOMAIN}/msp --tls.certfiles $ORG_CA_TLS_PATH
 		  { set +x; } 2>/dev/null
 		
 		cp $FABRIC_CA_CLIENT_HOME/msp/config.yaml $FABRIC_CA_CLIENT_HOME/users/User1@${ORG_DOMAIN}/msp/config.yaml
@@ -178,7 +187,7 @@ function generateAdminMsp() {
   echo "Generate the org admin msp"
   mkdir -p $FABRIC_CA_CLIENT_HOME/users/Admin@${ORG_DOMAIN}
   set -x
-  fabric-ca-client enroll -u https://orgadmin:orgadminpw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $FABRIC_CA_CLIENT_HOME/users/Admin@${ORG_DOMAIN}/msp --csr.hosts $PEER_HOST  --tls.certfiles $ORG_CA_TLS_PATH
+  ./fabric-ca-client enroll -u https://orgadmin:orgadminpw@localhost:${ORG_CA_PORT} --caname $CA_NAME -M $FABRIC_CA_CLIENT_HOME/users/Admin@${ORG_DOMAIN}/msp --csr.hosts $PEER_HOST  --tls.certfiles $ORG_CA_TLS_PATH
   { set +x; } 2>/dev/null
 
   cp $FABRIC_CA_CLIENT_HOME/msp/config.yaml $FABRIC_CA_CLIENT_HOME/users/Admin@${ORG_DOMAIN}/msp/config.yaml
