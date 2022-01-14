@@ -23,11 +23,11 @@ cd  $cdir
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Function +++++++++++++++++++++++++++++++++++++++++++
 function approveChaincode {
 		
-		PACKAGE_ID=$(peer lifecycle chaincode queryinstalled | grep custom_${vs} | grep -oP '(?<=Package ID: ).*?(?=,)')
+		PACKAGE_ID=$(/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode queryinstalled | grep custom_${vs} | grep -oP '(?<=Package ID: ).*?(?=,)')
 		echo "PackageID: $PACKAGE_ID"
 		
 		export CC_PACKAGE_ID=$PACKAGE_ID
-		peer lifecycle chaincode approveformyorg -o localhost:8051 --ordererTLSHostnameOverride ${ORDERER_HOST} --channelID $CHANNEL_NAME --signature-policy "${signature_policy}" --name $CHAINCODE_NAME --version ${vs} --package-id $CC_PACKAGE_ID --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile ${ORDERER_CA}
+		/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode approveformyorg -o localhost:8051 --ordererTLSHostnameOverride ${ORDERER_HOST} --channelID $CHANNEL_NAME --signature-policy "${signature_policy}" --name $CHAINCODE_NAME --version ${vs} --package-id $CC_PACKAGE_ID --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile ${ORDERER_CA}
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -54,7 +54,7 @@ function packageInstall() {
 		export CORE_PEER_ADDRESS=localhost:${ORG_PORT}
 		
 		echo "Package ${ORG_NAME} Chain Code"
-		peer lifecycle chaincode package custom_${vs}.tar.gz --path /home/atri/workspace_hlf/annpurna-wallet --lang java --label custom_${vs}
+		/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode package custom_${vs}.tar.gz --path /home/atri/workspace_hlf/annpurna-wallet --lang java --label custom_${vs}
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -63,7 +63,7 @@ function packageInstall() {
 		fi
 				
 		echo "Install Chaincode for ${ORG_NAME} "
-		peer lifecycle chaincode install custom_${vs}.tar.gz
+		/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode install custom_${vs}.tar.gz
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -71,7 +71,7 @@ function packageInstall() {
 			exit 1
 		fi
 				
-		peer lifecycle chaincode queryinstalled
+		/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode queryinstalled
 		rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -101,7 +101,7 @@ function packageInstallForMembers(){
 #----------------------------
 function checkCommitRediness(){
 	echo "Checking commit readiness"
-	peer lifecycle chaincode checkcommitreadiness --signature-policy "${signature_policy}" --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode checkcommitreadiness --signature-policy "${signature_policy}" --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA
 	rc=$?
 	
 	if [[ $rc -ne 0 ]];then
@@ -131,7 +131,7 @@ function commitChaincode(){
 	export ZIGGY_PEER_ADDRESS=localhost:7251
 	
 	
-	peer lifecycle chaincode commit --signature-policy "${signature_policy}" -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA --peerAddresses $ZUDEXO_PEER_ADDRESS --tlsRootCertFiles $ZUDEXO_PEER_TLS_ROOTCERT_FILE --peerAddresses $FCI_PEER_ADDRESS --tlsRootCertFiles $FCI_PEER_TLS_ROOTCERT_FILE --peerAddresses $ZIGGY_PEER_ADDRESS --tlsRootCertFiles $ZIGGY_PEER_TLS_ROOTCERT_FILE 
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode commit --signature-policy "${signature_policy}" -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version ${vs} --sequence ${seq} -E ${endorsement_plugin} -V ${validation_plugin} --tls --cafile $ORDERER_CA --peerAddresses $ZUDEXO_PEER_ADDRESS --tlsRootCertFiles $ZUDEXO_PEER_TLS_ROOTCERT_FILE --peerAddresses $FCI_PEER_ADDRESS --tlsRootCertFiles $FCI_PEER_TLS_ROOTCERT_FILE --peerAddresses $ZIGGY_PEER_ADDRESS --tlsRootCertFiles $ZIGGY_PEER_TLS_ROOTCERT_FILE 
 	rc=$?
 	
 		if [[ $rc -ne 0 ]];then
@@ -143,7 +143,7 @@ function commitChaincode(){
 	
 	echo "Chain code status on channel"
 	
-	peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --cafile $ORDERER_CA
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --cafile $ORDERER_CA
 	rc=$?
 	
 	if [[ $rc -ne 0 ]];then

@@ -1,6 +1,17 @@
 #cd /home/atri/go/src/github.com/hyperledger/fabric/build/bin
 cd /home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/
 
+#Generate TLS certificates Start
+export FABRIC_CA_CLIENT_HOME=/home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client
+export ORG_CA_TLS_PATH=/home/atri/workspace_hlf/annpurna/organizations/zudexo/fabric-ca-standalone-hsm/tls-cert.pem
+rm -rf /home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client/tls/
+#/home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client/fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-zudexo --tls.certfiles $ORG_CA_TLS_PATH
+/home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client/fabric-ca-client enroll -u https://peer0:peer0pw@localhost:7054 --caname  ca-zudexo -M $FABRIC_CA_CLIENT_HOME/tls --enrollment.profile tls --csr.hosts peer0.zudexo.yamuna.com --csr.hosts localhost --tls.certfiles $ORG_CA_TLS_PATH
+cp /home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client/tls/tlscacerts/* /home/atri/workspace_hlf/annpurna/organizations/zudexo/organization/peerOrganizations/zudexo.yamuna.com/peers/peer0.zudexo.yamuna.com/tls/ca.crt
+cp /home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client/tls/signcerts/* /home/atri/workspace_hlf/annpurna/organizations/zudexo/organization/peerOrganizations/zudexo.yamuna.com/peers/peer0.zudexo.yamuna.com/tls/server.crt
+cp /home/atri/workspace_hlf/annpurna/staging/zudexo-fabric-ca-client/tls/keystore/* /home/atri/workspace_hlf/annpurna/organizations/zudexo/organization/peerOrganizations/zudexo.yamuna.com/peers/peer0.zudexo.yamuna.com/tls/server.key
+#Generate TLS certifactes END 
+
 echo "Setting up env variables"
 
 export FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/zudexo/conf-local/

@@ -183,7 +183,7 @@ function createChannel(){
 	export CORE_PEER_ADDRESS=localhost:7051
 	
 	
-	peer channel signconfigtx -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com -f ${NETWORK_CONF_DIR}/channel-artifacts/${CHANNEL_NAME}.tx  --tls --cafile ${ORDERER_CA}
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer channel signconfigtx -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com -f ${NETWORK_CONF_DIR}/channel-artifacts/${CHANNEL_NAME}.tx  --tls --cafile ${ORDERER_CA}
 	rc=$?
 	if [[ $rc -ne 0 ]];then
 		echo "Terminating process"
@@ -233,9 +233,9 @@ joinChannel(){
 	export CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
 	export CORE_PEER_ADDRESS=localhost:${ORG_PORT}
 	
-	peer channel fetch 0 ${STG_DIR}/${CORE_PEER_LOCALMSPID}_channel.block -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com -c $CHANNEL_NAME --tls --cafile ${ORDERER_CA}
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer channel fetch 0 ${STG_DIR}/${CORE_PEER_LOCALMSPID}_channel.block -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com -c $CHANNEL_NAME --tls --cafile ${ORDERER_CA}
 	
-	peer channel join -b ${STG_DIR}/${CORE_PEER_LOCALMSPID}_channel.block
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer channel join -b ${STG_DIR}/${CORE_PEER_LOCALMSPID}_channel.block
 	rc=$?
 	
 	if [[ $rc -ne 0 ]];then
@@ -298,7 +298,7 @@ function updateChannelForAnchorPeer(){
 	export CORE_PEER_TLS_ROOTCERT_FILE=${ORGS_DIR}/${ORG_NAME}/organization/peerOrganizations/${ORG_DOMAIN}/peers/peer0.${ORG_DOMAIN}/tls/ca.crt
 	export CORE_PEER_ADDRESS=localhost:${ORG_PORT}
 	
-	peer channel update -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com -c $CHANNEL_NAME -f ${NETWORK_CONF_DIR}/channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA 
+	/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons-hsm/peer channel update -o localhost:8051 --ordererTLSHostnameOverride orderer.ganga.com -c $CHANNEL_NAME -f ${NETWORK_CONF_DIR}/channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA 
 	rc=$?
 	
 	if [[ $rc -ne 0 ]];then
