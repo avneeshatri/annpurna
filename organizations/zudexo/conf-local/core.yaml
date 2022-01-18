@@ -730,7 +730,7 @@ operations:
 ###############################################################################
 metrics:
     # metrics provider is one of statsd, prometheus, or disabled
-    provider: disabled
+    provider: prometheus
 
     # statsd configuration
     statsd:
@@ -745,4 +745,4 @@ metrics:
         writeInterval: 10s
 
         # prefix is prepended to all emitted statsd metrics
-        prefix:
+        prefix: zudexo
