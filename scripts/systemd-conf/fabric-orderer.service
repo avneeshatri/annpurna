@@ -1,0 +1,32 @@
+# Service definition for Hyperledger fabric orderer server
+[Unit]
+Description=hyperledger fabric-orderer server - Orderer for hyperledger fabric
+Documentation=https://hyperledger-fabric.readthedocs.io/
+Wants=network-online.target
+After=network-online.target
+[Service]
+Type=simple
+Restart=on-failure
+StandardOutput=append:/home/atri/workspace_hlf/annpurna/scripts/logs/systemd/fabric-orderer-sysout.log
+StandardError=append:/home/atri/workspace_hlf/annpurna/scripts/logs/systemd/fabric-orderer-syserr.log
+Environment=FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/orderer/conf-local/
+Environment=FABRIC_LOGGING_SPEC=DEBUG
+Environment=ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+Environment=ORDERER_GENERAL_LISTENPORT=8051
+Environment=ORDERER_GENERAL_GENESISMETHOD=file
+Environment=ORDERER_GENERAL_GENESISFILE=/home/atri/workspace_hlf/annpurna/network/system-genesis-block/genesis.block
+Environment=ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+Environment=ORDERER_GENERAL_LOCALMSPDIR=/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/msp
+Environment=ORDERER_GENERAL_TLS_ENABLED=true
+Environment=ORDERER_TLS_DIR=/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/
+Environment=ORDERER_GENERAL_TLS_PRIVATEKEY=/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/server.key
+Environment=ORDERER_GENERAL_TLS_CERTIFICATE=/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/server.crt
+Environment=ORDERER_GENERAL_TLS_ROOTCAS=[/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/ca.crt]
+Environment=ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=1
+Environment=ORDERER_KAFKA_VERBOSE=true
+Environment=ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/server.crt
+Environment=ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/server.key
+Environment=ORDERER_GENERAL_CLUSTER_ROOTCAS=[/home/atri/workspace_hlf/annpurna/organizations/orderer/organization/ordererOrganizations/orderer.ganga.com/orderers/orderer.ganga.com/tls/ca.crt]
+ExecStart=/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons/orderer start
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,65 @@
+version: '2'
+
+networks:
+  annpurna:
+
+
+volumes:
+  peer0.cbitc.saraswati.gov:
+
+services:
+
+  ca_cbitc:
+    image: hyperledger/fabric-ca:latest
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-cbitc
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=7454
+    ports:
+      - "7454:7454"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - /home/atri/workspace_hlf/annpurna/organizations/cbitc/fabric-ca:/etc/hyperledger/fabric-ca-server
+    container_name: ca_cbitc
+    networks:
+      - annpurna
+
+  peer0.cbitc.saraswati.gov:
+    container_name: peer0.cbitc.saraswati.gov
+    image: hyperledger/fabric-peer:2.2.3
+    environment:
+      #Generic peer variables
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_annpurna
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/signcerts/cert.pem
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/keystore/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/tlscacerts/tls-localhost-7454-ca-cbitc.pem
+      # Peer specific variabes
+      - CORE_PEER_ID=peer0.cbitc.saraswati.gov
+      - CORE_PEER_ADDRESS=peer0.cbitc.saraswati.gov:7451
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7451
+      - CORE_PEER_CHAINCODEADDRESS=peer0.cbitc.saraswati.gov:7452
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7452
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.cbitc.saraswati.gov:7451
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.cbitc.saraswati.gov:7451
+      - CORE_PEER_LOCALMSPID=CbitcMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - /home/atri/workspace_hlf/annpurna/organizations/cbitc/organization/peerOrganizations/cbitc.saraswati.gov/peers/peer0.cbitc.saraswati.gov/msp:/etc/hyperledger/fabric/msp
+        - /home/atri/workspace_hlf/annpurna/organizations/cbitc/organization/peerOrganizations/cbitc.saraswati.gov/peers/peer0.cbitc.saraswati.gov/tls:/etc/hyperledger/fabric/tls
+        - peer0.cbitc.saraswati.gov:/var/hyperledger/production
+        - /home/atri/workspace_hlf/annpurna/organizations/cbitc/conf/core.yaml:/etc/hyperledger/fabric/core.yaml
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 7451:7451
+    networks:
+      - annpurna

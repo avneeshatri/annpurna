@@ -149,7 +149,7 @@ function generateGenesisBlock(){
 	echo "Update ChannelCreationPolicy of genesis json"
 	policy=$(cat ${NETWORK_CONF_DIR}/ChannelCreatePolicy.json)
 	
-	cat ${STG_DIR}/genesis.json | jq .data.data[0].payload.data.config.channel_group.groups.Consortiums.groups.SampleConsortium.values.ChannelCreationPolicy.value="${policy}" > ${STG_DIR}/modified_genesis.json
+	cat ${STG_DIR}/genesis.json | jq .data.data[0].payload.data.config.channel_group.groups.Consortiums.groups.AnnpurnaConsortium.values.ChannelCreationPolicy.value="${policy}" > ${STG_DIR}/modified_genesis.json
 	rc=$?
 	if [[ $rc -ne 0 ]];then
 		echo "Terminating process"
