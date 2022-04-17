@@ -14,8 +14,11 @@ signature_policy="AND ( AND ('ZudexoMSP.member', 'FciMSP.member'), OR('FciMSP.me
 
 . /home/atri/workspace_hlf/annpurna/scripts/conf/net_deploy.cnf
 
-endorsement_plugin="annpurna_custom_endorsement"
-validation_plugin="annpurna_custom_validation"
+#endorsement_plugin="annpurna_custom_endorsement"
+#validation_plugin="annpurna_custom_validation"
+endorsement_plugin=escc
+validation_plugin=vscc
+
 cdir=$CC_DIR
 echo "Clean up chaincode dir"
 rm -rf $cdir/*

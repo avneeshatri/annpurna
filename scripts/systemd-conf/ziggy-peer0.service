@@ -1,0 +1,39 @@
+# Service definition for Hyperledger fabric peer server of Ziggy
+[Unit]
+Description=hyperledger fabric-peer server - Peer for hyperledger fabric
+Documentation=https://hyperledger-fabric.readthedocs.io/
+Wants=network-online.target
+After=network-online.target
+[Service]
+Type=simple
+Restart=on-failure
+StandardOutput=append:/home/atri/workspace_hlf/annpurna/scripts/logs/systemd/fabric-ziggy-peer0-sysout.log
+StandardError=append:/home/atri/workspace_hlf/annpurna/scripts/logs/systemd/fabric-ziggy-peer0-syserr.log
+Environment=FABRIC_CFG_PATH=/home/atri/workspace_hlf/annpurna/organizations/ziggy/conf-local/
+Environment=CORE_PEER_MSPCONFIGPATH=/home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/msp
+Environment=CORE_PEER_LOCALMSPID=ZiggyMSP
+Environment=FABRIC_LOGGING_SPEC=DEBUG
+Environment=CORE_PEER_TLS_ENABLED=true
+Environment=CORE_PEER_PROFILE_ENABLED=true
+Environment=ZIGGY_PEER_TLS_DIR=/home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/tls/
+Environment=CORE_PEER_TLS_CERT_FILE=/home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/tls/server.crt
+Environment=CORE_PEER_TLS_KEY_FILE=/home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/tls/server.key
+Environment=CORE_PEER_TLS_ROOTCERT_FILE=/home/atri/workspace_hlf/annpurna/organizations/ziggy/organization/peerOrganizations/ziggy.bhagirathi.com/peers/peer0.ziggy.bhagirathi.com/tls/ca.crt
+Environment=CORE_PEER_ID=peer0.ziggy.bhagirathi.com
+Environment=CORE_PEER_ADDRESS=peer0.ziggy.bhagirathi.com:7251
+Environment=CORE_PEER_LISTENADDRESS=0.0.0.0:7251
+Environment=CORE_PEER_CHAINCODEADDRESS=peer0.ziggy.bhagirathi.com:7252
+Environment=CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7252
+Environment=CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ziggy.bhagirathi.com:7251
+Environment=CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ziggy.bhagirathi.com.com:7251
+
+Environment=CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+Environment=CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=127.0.0.1:17384
+# The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+# provide the credentials for ledger to connect to CouchDB.  The username and password must
+# match the username and password set for the associated CouchDB.
+Environment=CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+Environment=CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+ExecStart=/home/atri/workspace_hlf/annpurna/scripts/fabric-daemons/peer node start
+[Install]
+WantedBy=multi-user.target

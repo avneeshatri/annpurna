@@ -10,6 +10,7 @@ cd $SCRIPT_DIR
 function init {
 	echo "Performing clean up and some tweaks"
 	sudo chown atri:atri -R /home/atri/workspace_hlf/annpurna/organizations
+	sudo chown atri:atri -R  /tmp/hyperledger/
 	rm -rf /tmp/hyperledger/
 	mkdir /tmp/hyperledger/
 }
@@ -18,26 +19,31 @@ function init {
 function startNetwork {
 	
 	echo "Starting services of members"
+	sudo systemctl start fabric-orderer.service
+	sudo systemctl start zudexo-peer0.service
+	sudo systemctl start ziggy-peer0.service
+	sudo systemctl start fci-peer0.service
+	sudo systemctl start sabkabazzar-peer0.service
 	
-	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer
-	rm nohup.out
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-orderer.sh &
+#	cd /home/atri/workspace_hlf/annpurna/scripts/logs/orderer
+#	rm nohup.out
+#	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-orderer.sh &
 	
-	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci
-	rm nohup.out
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-fci.sh &
+#	cd /home/atri/workspace_hlf/annpurna/scripts/logs/fci
+#	rm nohup.out
+#	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-fci.sh &
 	
-	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo
-	rm nohup.out
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-zudexo.sh &
+#	cd /home/atri/workspace_hlf/annpurna/scripts/logs/zudexo
+#	rm nohup.out
+#	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-zudexo.sh &
 	
-	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy
-	rm nohup.out
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-ziggy.sh &
+#	cd /home/atri/workspace_hlf/annpurna/scripts/logs/ziggy
+#	rm nohup.out
+#	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-ziggy.sh &
 	
-	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar/
-	rm nohup.out
-	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-sabkabazzar.sh &
+#	cd /home/atri/workspace_hlf/annpurna/scripts/logs/sabkabazzar/
+#	rm nohup.out
+#	nohup /home/atri/workspace_hlf/annpurna/scripts/bin-standalone/setup-sabkabazzar.sh &
 
 }
 
@@ -418,13 +424,18 @@ function bringDownFabricCAServer {
 }
 
 function bringDownNetworkServer {
-	ps -ef | grep peer
-	kill -9 $(ps -ef | grep peer | cut -d " " -f ${pid_index})
-	ps -ef | grep peer
+	sudo systemctl stop fabric-orderer.service
+	sudo systemctl stop zudexo-peer0.service
+	sudo systemctl stop ziggy-peer0.service
+	sudo systemctl stop fci-peer0.service
+	sudo systemctl stop sabkabazzar-peer0.service
+#	ps -ef | grep peer
+#	kill -9 $(ps -ef | grep peer | cut -d " " -f ${pid_index})
+#	ps -ef | grep peer
 	
-	ps -ef | grep orderer
-	kill -9 $(ps -ef | grep orderer | cut -d " " -f ${pid_index})
-	ps -ef | grep orderer
+#	ps -ef | grep orderer
+#	kill -9 $(ps -ef | grep orderer | cut -d " " -f ${pid_index})
+#	ps -ef | grep orderer
 	
 	ps -ef | grep "chaincode.jar"
 	kill -9 $(ps -ef | grep "chaincode.jar" | cut -d " " -f ${pid_index})
@@ -478,7 +489,7 @@ init
 
 if [[ $MODE == "DOWN" ]];then
 	echo "network is down"
-	pid_index=8
+	pid_index=7
 	bringDownCouchDBServices
 	bringDownNetworkServer
 	bringDownFabricCAServer
